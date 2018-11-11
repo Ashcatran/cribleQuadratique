@@ -5,21 +5,20 @@ import math
 
 def primeNumbers(limit, primeList):
     for i in range(1,limit):
-        print(i, isPrime(i, primeList))
+        if isPrime(i, primeList):
+            primeList.append(i) 
 
 def isPrime(number, primeList):
-    for i in range(2, math.floor(math.sqrt(number))+1):
-        #print (number, i)
-        if number % i == 0:
+    for i in primeList:
+        if i != 1 and i != number and number % i == 0:
             return False
-    primeList.append(number)
     return True
 
 if __name__ == "__main__":
     s = "hello world"
     print(s)
     primeList = []
-    primeNumbers(10, primeList)
+    primeNumbers(100, primeList)
     for item in primeList:
         print(item)
 
