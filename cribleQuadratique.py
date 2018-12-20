@@ -22,7 +22,6 @@ def getPrimeNumbers(start, end, primeList):
     for i in range(start,end):
         if isPrime(i, primeList):
             primeList.append(i)
-           #print("found new prime:", i)
         status = (i - start)*100 // number
         if status != prevStatus:
             print(status, "%")
@@ -113,14 +112,10 @@ def makeBinaryVectors(matrix):
 
 def findLinearCombination(matrix, allCombinations):
     combination =[0 for i in range(len(matrix))]
-   # result = [0 for i in range(len(matrix[0]))]
     valid = False
     while valid == False:
-       # print(len(allCombinations))
-   #     combination =[0 for i in range(len(matrix))]
         result = [0 for i in range(len(matrix[0]))]
         combination = allCombinations[0]
-    # print("combination", combination)
 
         for i in range(len(matrix)):
             for j in range(len(matrix[i])):
@@ -131,12 +126,7 @@ def findLinearCombination(matrix, allCombinations):
             if result[i] != 0:
                 valid = False
         if valid == False:
-            #allCombinations.remove(combination)
             removeCombination(allCombinations, combination)
-   # print("matrix")
-    #print(matrix)
-   # print("combination", combination)
-   # print("result", result)
 
 
     return combination
@@ -161,58 +151,38 @@ if __name__ == "__main__":
     #N = 3119*3121
     N = 2301351
     limit = N
-    #print(limit)
     primeList = getPrimeNumbersUpTo(limit)
     print("loaded", len(primeList), "prime numbers, from", primeList[0], "to", primeList[-1])
     if isPrime(N, primeList):
         print(N, "is prime")
         exit(0)
     m = math.floor(math.sqrt(N))
-    #print("m", m)
     f = factorBaseSize(N)
-    print("vector base size", f)
-    #primeList = primeList[0:f]
-    #print("primeList", primeList)
-    #facto = primeFactorization(N, primeList)
-    #print(facto)
-    #for p in primeList:
-    #    if facto[primeList.index(p)] != 0:
-    #       print(p, facto[primeList.index(p)])
     # Création de la base de facteurs
     S = [-1]
     for p in primeList:
         if legendre(N, p) == 1:
             S.append(p)
         if len(S) == f:
-            break;
+            break
             
-    #print("S", S)
     matrix = []
     aVector = []
     bVector = []
     for x in range(-f,f+1):
-        #print(i)
         q = (x + m)**2 - N
         a = x + m
         e = primeFactorization(q, S[1:])
         cf = completelyFactores(q, S, e)
         if cf:
-           # print(x, a, q, e, cf)
             aVector.append(a)
             bVector.append(q)
             matrix.append(e)
-    #print("ax", aVector)
-    #print("bx", bVector)
-    #showMatrix(matrix)
     binaryMatrix = makeBinaryVectors(matrix)
-    #showMatrix(binaryMatrix)
     allCombinations = list(itertools.product([0, 1], repeat = len(matrix)))
-    #allCombinations= [(1,0,1,0,0,0,1)]
     solved = False
     while solved == False:
-       # print(len(allCombinations))
         linearCombination = findLinearCombination(binaryMatrix, allCombinations)
-        #linearCombination   
         v = [0 for i in range(f)]
         for i in range(len(matrix)):
             for j in range(f):
@@ -226,32 +196,21 @@ if __name__ == "__main__":
         X = X%N
         Z = 0
         K=2
-        #while not isSquare(Z) or Z == 0:
-        while (X**2)%N !=(Z**2)%N: # or K < 1:
+        while (X**2)%N !=(Z**2)%N:
             Z = (X - K*X)%N
             K = K+1
-           #print(K, Z)
-        #X = int(math.sqrt(Z))
 
-
-    # X = 13922
-        #print("X", X)
         Y = 1
         for i in range(len(matrix)):
             if linearCombination[i] > 0:
                 Y = Y*aVector[i]*linearCombination[i]
         Y = Y%N
-        #print("Y", Y)
 
         sol1 = gcd(abs(X-Y), N)
         sol2 = gcd(X+Y, N)
-        #print("sol1", sol1)
-        #print("sol2", sol2)
-        #print(X,Y,sol1,sol2)
         if sol1 != 1 and sol2 != 1:
             solved = True
         else:
-            #allCombinations.remove(linearCombination)
             removeCombination(allCombinations,linearCombination)
     print("SOLVED!", N , "=", sol1, "*", sol2)
     
